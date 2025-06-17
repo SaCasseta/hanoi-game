@@ -1,11 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Torres de Hanói - Sistema de Usuário</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+  <h1>Torres de Hanói</h1>
+  <div id="player-form">
+    <input type="text" id="playerName" placeholder="Digite seu nome">
+    <button id="start">Iniciar Jogo</button>
+  </div>
+  <div id="leaderboard" style="display: none;">
+    <h2>Placar</h2>
+    <table id="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Posição</th>
+          <th>Nome</th>
+          <th>Fases Concluídas</th>
+          <th>Tempo Total</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+  </div>
+  <div id="phase" style="display: none;">Fase: 1</div>
+  <div id="timer" style="display: none;">Tempo: 00:00</div>
+  <div id="info" style="display: none;">Movimentos: 0</div>
+  <div id="game-container" style="display: none;">
+    <div id="tower1" class="tower">
+      <div class="pole"></div>
+    </div>
+    <div id="tower2" class="tower">
+      <div class="pole"></div>
+    </div>
+    <div id="tower3" class="tower">
+      <div class="pole"></div>
+    </div>
+  </div>
+  <button id="reset" style="display: none;">Reiniciar Fase</button>
+  <button id="exit" style="display: none;">Sair do Jogo</button>
 </body>
 </html>
