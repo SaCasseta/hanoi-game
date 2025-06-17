@@ -20,6 +20,6 @@ public class Usuario {
     private Long id;
     private String nome;
     private Timestamp tempo;
-    private int qtdDiscos;
-    private int qtdMovimento;
+    private int fase;
+
 }
