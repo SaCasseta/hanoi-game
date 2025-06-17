@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -19,32 +18,25 @@ public class UsuarioController {
     UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> getAll(@RequestParam(required = false) String nome){
-        if (nome != null && !nome.isEmpty()){
+    public List<Usuario> getAll(@RequestParam(required = false) String nome) {
+        if (nome != null && !nome.isEmpty()) {
             return usuarioService.getByNome(nome);
         }
         return usuarioService.getAll();
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UsuarioDTO> getByid(@PathVariable Long id){
-//        Optional<UsuarioDTO> usuarioDTOOptional = usuarioService.getById(id);
-//        if (usuarioDTOOptional.isPresent()){
-//            return ResponseEntity.ok(usuarioDTOOptional.get());
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
     @PostMapping
-    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO usuarioDTO){
-        UsuarioDTO usuarioDTOSave = usuarioService.creat(usuarioDTO);
+    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO usuarioDTO) {
+        if (usuarioDTO.getNome() == null || usuarioDTO.getNome().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        UsuarioDTO usuarioDTOSave = usuarioService.create(usuarioDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDTOSave);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
-        if (usuarioService.delete(id)){
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        if (usuarioService.delete(id)) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

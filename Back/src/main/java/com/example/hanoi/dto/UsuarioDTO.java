@@ -1,10 +1,6 @@
 package com.example.hanoi.dto;
 
 import com.example.hanoi.entity.Usuario;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.sql.Timestamp;
 
 public class UsuarioDTO {
@@ -13,8 +9,7 @@ public class UsuarioDTO {
     private Timestamp tempo;
     private int fase;
 
-
-    public Usuario toUsuario(){
+    public Usuario toUsuario() {
         return new Usuario(
                 this.id,
                 this.nome,
@@ -23,12 +18,12 @@ public class UsuarioDTO {
         );
     }
 
-    public UsuarioDTO fromUsuario(Usuario usuario){
+    public UsuarioDTO fromUsuario(Usuario usuario) {
         return new UsuarioDTO(
-                this.id,
-                this.nome,
-                this.tempo,
-                this.fase
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getTempo(),
+                usuario.getFase()
         );
     }
 
@@ -78,7 +73,6 @@ public class UsuarioDTO {
         MINUTOS, HORAS, SEGUNDOS
     }
 
-
     public double converterTempo(UnidadeTempo unidade) {
         if (tempo == null) {
             return 0.0;
@@ -87,17 +81,12 @@ public class UsuarioDTO {
         long milissegundos = tempo.getTime();
 
         switch (unidade) {
-
             case SEGUNDOS:
-                // Converte milissegundos para minutos (1 min = 60.000 ms)
                 return milissegundos / 1000.0;
             case MINUTOS:
-                // Converte milissegundos para minutos (1 min = 60.000 ms)
                 return milissegundos / 60000.0;
             case HORAS:
-                // Converte milissegundos para horas (1 hora = 3.600.000 ms)
                 return milissegundos / 3600000.0;
-
             default:
                 throw new IllegalArgumentException("Unidade de tempo inválida: " + unidade);
         }

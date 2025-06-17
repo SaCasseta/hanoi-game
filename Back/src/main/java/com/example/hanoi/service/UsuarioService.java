@@ -15,38 +15,22 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-
-
-
-
-
-
-    public List<Usuario> getAll(){
+    public List<Usuario> getAll() {
         return usuarioRepository.findAll();
     }
 
-    public List<Usuario> getByNome(String nome){
+    public List<Usuario> getByNome(String nome) {
         return usuarioRepository.findAllByNome(nome);
     }
 
-//    public Optional<UsuarioDTO> getById(Long id){
-//        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-//        if (usuarioOptional.isPresent()){
-//            UsuarioDTO usuarioDTO = new UsuarioDTO();
-//            return Optional.of(usuarioDTO.fromUsuario(usuarioOptional.get()));
-//        } else {
-//            return Optional.empty();
-//        }
-//    }
-
-    public UsuarioDTO creat(UsuarioDTO usuarioDTO){
+    public UsuarioDTO create(UsuarioDTO usuarioDTO) {
         Usuario usuario = usuarioDTO.toUsuario();
         usuario = usuarioRepository.save(usuario);
         return usuarioDTO.fromUsuario(usuario);
     }
 
-    public boolean delete(Long id){
-        if (usuarioRepository.existsById(id)){
+    public boolean delete(Long id) {
+        if (usuarioRepository.existsById(id)) {
             usuarioRepository.deleteById(id);
             return true;
         } else {

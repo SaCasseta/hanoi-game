@@ -41,9 +41,8 @@ startButton.addEventListener('click', () => {
 exitButton.addEventListener('click', () => {
   stopTimer();
   const playerName = playerNameInput.value.trim();
-  // Converter totalTime (segundos) para milissegundos para Timestamp
   const timestamp = new Date(totalTime * 1000).toISOString();
-  axios.post('/usuario', { 
+  axios.post('http://localhost:8080/usuario', { 
     nome: playerName, 
     fase: currentPhase,
     tempo: timestamp 
@@ -72,8 +71,8 @@ exitButton.addEventListener('click', () => {
     loadLeaderboard();
   })
   .catch(error => {
-    console.error('Erro ao salvar o progresso:', error);
-    alert('Erro ao salvar o progresso. Tente novamente.');
+    console.error('Erro ao salvar o progresso:', error.response || error);
+    alert(`Erro ao salvar o progresso: ${error.response?.status ? `HTTP ${error.response.status} - ${error.response.data?.message || error.message}` : error.message}`);
   });
 });
 
@@ -184,22 +183,18 @@ function resetGame() {
 }
 
 function loadLeaderboard() {
-  axios.get('/usuario')
+  axios.get('http://localhost:8080/usuario')
     .then(response => {
       const users = response.data;
-      // Ordenar por fase (decrescente) e, em caso de empate, por tempo (crescente)
       users.sort((a, b) => {
         if (b.fase === a.fase) {
           return new Date(a.tempo).getTime() - new Date(b.tempo).getTime();
         }
         return b.fase - a.fase;
       });
-      // Limpar tabela
       leaderboardBody.innerHTML = '';
-      // Preencher tabela
       users.forEach((user, index) => {
         const row = document.createElement('tr');
-        // Converter tempo (Timestamp) para segundos para exibição
         const seconds = Math.floor(new Date(user.tempo).getTime() / 1000);
         row.innerHTML = `
           <td>${index + 1}</td>
@@ -211,8 +206,8 @@ function loadLeaderboard() {
       });
     })
     .catch(error => {
-      console.error('Erro ao carregar o placar:', error);
-      alert('Erro ao carregar o placar. Tente novamente.');
+      console.error('Erro ao carregar o placar:', error.response || error);
+      alert(`Erro ao carregar o placar: ${error.response?.status ? `HTTP ${error.response.status} - ${error.response.data?.message || error.message}` : error.message}`);
     });
 }
 
