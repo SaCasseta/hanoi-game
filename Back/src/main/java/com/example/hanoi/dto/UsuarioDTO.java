@@ -6,34 +6,72 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 public class UsuarioDTO {
     private Long id;
     private String nome;
     private Timestamp tempo;
-    private int qtdDiscos;
-    private int qtdMovimento;
+    private int fase;
+
 
     public Usuario toUsuario(){
         return new Usuario(
-                this.getId(),
-                this.getNome(),
+                this.id,
+                this.nome,
                 this.tempo,
-                this.getQtdDiscos(),
-                this.getQtdMovimento()
+                this.fase
         );
     }
 
     public UsuarioDTO fromUsuario(Usuario usuario){
-        return  new UsuarioDTO(
-                usuario.getId(),
-                usuario.getNome(),
-                usuario.getTempo(),
-                usuario.getQtdDiscos(),
-                usuario.getQtdMovimento()
+        return new UsuarioDTO(
+                this.id,
+                this.nome,
+                this.tempo,
+                this.fase
         );
+    }
+
+    public UsuarioDTO() {
+    }
+
+    public UsuarioDTO(Long id, String nome, Timestamp tempo, int fase) {
+        this.id = id;
+        this.nome = nome;
+        this.tempo = tempo;
+        this.fase = fase;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Timestamp getTempo() {
+        return tempo;
+    }
+
+    public void setTempo(Timestamp tempo) {
+        this.tempo = tempo;
+    }
+
+    public int getFase() {
+        return fase;
+    }
+
+    public void setFase(int fase) {
+        this.fase = fase;
     }
 
     public enum UnidadeTempo {

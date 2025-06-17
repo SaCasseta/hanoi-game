@@ -26,15 +26,15 @@ public class UsuarioController {
         return usuarioService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> getByid(@PathVariable Long id){
-        Optional<UsuarioDTO> usuarioDTOOptional = usuarioService.getById(id);
-        if (usuarioDTOOptional.isPresent()){
-            return ResponseEntity.ok(usuarioDTOOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<UsuarioDTO> getByid(@PathVariable Long id){
+//        Optional<UsuarioDTO> usuarioDTOOptional = usuarioService.getById(id);
+//        if (usuarioDTOOptional.isPresent()){
+//            return ResponseEntity.ok(usuarioDTOOptional.get());
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @PostMapping
     public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioDTO usuarioDTO){

@@ -15,6 +15,12 @@ public class UsuarioService {
     @Autowired
     UsuarioRepository usuarioRepository;
 
+
+
+
+
+
+
     public List<Usuario> getAll(){
         return usuarioRepository.findAll();
     }
@@ -23,15 +29,15 @@ public class UsuarioService {
         return usuarioRepository.findAllByNome(nome);
     }
 
-    public Optional<UsuarioDTO> getById(Long id){
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-        if (usuarioOptional.isPresent()){
-            UsuarioDTO usuarioDTO = new UsuarioDTO();
-            return Optional.of(usuarioDTO.fromUsuario(usuarioOptional.get()));
-        } else {
-            return Optional.empty();
-        }
-    }
+//    public Optional<UsuarioDTO> getById(Long id){
+//        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+//        if (usuarioOptional.isPresent()){
+//            UsuarioDTO usuarioDTO = new UsuarioDTO();
+//            return Optional.of(usuarioDTO.fromUsuario(usuarioOptional.get()));
+//        } else {
+//            return Optional.empty();
+//        }
+//    }
 
     public UsuarioDTO creat(UsuarioDTO usuarioDTO){
         Usuario usuario = usuarioDTO.toUsuario();

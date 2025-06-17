@@ -9,9 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Entity
 public class Usuario {
 
@@ -22,4 +20,46 @@ public class Usuario {
     private Timestamp tempo;
     private int fase;
 
+
+    public Usuario() {
+    }
+
+    public Usuario(Long id, String nome, Timestamp tempo, int fase) {
+        this.id = id;
+        this.nome = nome;
+        this.tempo = tempo;
+        this.fase = fase;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Timestamp getTempo() {
+        return tempo;
+    }
+
+    public void setTempo(Timestamp tempo) {
+        this.tempo = tempo;
+    }
+
+    public int getFase() {
+        return fase;
+    }
+
+    public void setFase(int fase) {
+        this.fase = fase;
+    }
 }
