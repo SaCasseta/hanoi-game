@@ -18,7 +18,6 @@ let timerInterval = null;
 let timeElapsed = 0;
 let totalTime = 0;
 let isTimerStarted = false;
-let currentGameId = null;
 
 startButton.addEventListener('click', () => {
   const playerName = playerNameInput.value.trim();
@@ -26,67 +25,56 @@ startButton.addEventListener('click', () => {
     alert('Por favor, digite seu nome!');
     return;
   }
-  axios.post('/api/games/start', `playerName=${encodeURIComponent(playerName)}&phase=${currentPhase}`, {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  })
-  .then(response => {
-    currentGameId = response.data.id;
-    playerForm.style.display = 'none';
-    leaderboard.style.display = 'none';
-    gameContainer.style.display = 'flex';
-    phaseDisplay.style.display = 'block';
-    timerDisplay.style.display = 'block';
-    info.style.display = 'block';
-    resetButton.style.display = 'block';
-    exitButton.style.display = 'block';
-    playerNameInput.disabled = true;
-    startButton.disabled = true;
-    setupPhase();
-  })
-  .catch(error => {
-    console.error('Erro ao iniciar o jogo:', error);
-    alert('Erro ao iniciar o jogo. Tente novamente.');
-  });
+  playerForm.style.display = 'none';
+  leaderboard.style.display = 'none';
+  gameContainer.style.display = 'flex';
+  phaseDisplay.style.display = 'block';
+  timerDisplay.style.display = 'block';
+  info.style.display = 'block';
+  resetButton.style.display = 'block';
+  exitButton.style.display = 'block';
+  playerNameInput.disabled = true;
+  startButton.disabled = true;
+  setupPhase();
 });
 
 exitButton.addEventListener('click', () => {
-  if (currentGameId) {
-    stopTimer();
-    const playerName = playerNameInput.value.trim();
-    axios.post(`/api/games/${currentGameId}/complete`, { 
-      timeElapsed: totalTime, 
-      phase: currentPhase,
-      playerName: playerName 
-    }, {
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(() => {
-      currentPhase = 1;
-      diskCount = 3;
-      totalTime = 0;
-      moveCount = 0;
-      timeElapsed = 0;
-      isTimerStarted = false;
-      currentGameId = null;
-      phaseDisplay.textContent = `Fase: ${currentPhase}`;
-      gameContainer.style.display = 'none';
-      phaseDisplay.style.display = 'none';
-      timerDisplay.style.display = 'none';
-      info.style.display = 'none';
-      resetButton.style.display = 'none';
-      exitButton.style.display = 'none';
-      playerForm.style.display = 'block';
-      leaderboard.style.display = 'block';
-      playerNameInput.disabled = false;
-      startButton.disabled = false;
-      playerNameInput.value = '';
-      loadLeaderboard();
-    })
-    .catch(error => {
-      console.error('Erro ao sair do jogo:', error);
-      alert('Erro ao salvar o progresso. Tente novamente.');
-    });
-  }
+  stopTimer();
+  const playerName = playerNameInput.value.trim();
+  // Converter totalTime (segundos) para milissegundos para Timestamp
+  const timestamp = new Date(totalTime * 1000).toISOString();
+  axios.post('/usuario', { 
+    nome: playerName, 
+    fase: currentPhase,
+    tempo: timestamp 
+  }, {
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(() => {
+    currentPhase = 1;
+    diskCount = 3;
+    totalTime = 0;
+    moveCount = 0;
+    timeElapsed = 0;
+    isTimerStarted = false;
+    phaseDisplay.textContent = `Fase: ${currentPhase}`;
+    gameContainer.style.display = 'none';
+    phaseDisplay.style.display = 'none';
+    timerDisplay.style.display = 'none';
+    info.style.display = 'none';
+    resetButton.style.display = 'none';
+    exitButton.style.display = 'none';
+    playerForm.style.display = 'block';
+    leaderboard.style.display = 'block';
+    playerNameInput.disabled = false;
+    startButton.disabled = false;
+    playerNameInput.value = '';
+    loadLeaderboard();
+  })
+  .catch(error => {
+    console.error('Erro ao salvar o progresso:', error);
+    alert('Erro ao salvar o progresso. Tente novamente.');
+  });
 });
 
 towers.forEach(tower => {
@@ -121,20 +109,7 @@ towers.forEach(tower => {
       targetTower.appendChild(disk);
       moveCount++;
       info.textContent = `Movimentos: ${moveCount}`;
-      axios.post(`/api/games/${currentGameId}/move`, {
-        fromTower: disk.parentElement.id,
-        toTower: targetTower.id,
-        disk: parseInt(disk.textContent)
-      }, {
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(response => {
-        checkWin();
-      })
-      .catch(error => {
-        console.error('Erro ao salvar movimento:', error);
-        alert('Erro ao salvar movimento. Tente novamente.');
-      });
+      checkWin();
     }
   });
 });
@@ -155,29 +130,10 @@ function checkWin() {
     stopTimer();
     totalTime += timeElapsed;
     info.textContent = `Parabéns! Fase ${currentPhase} concluída em ${moveCount} movimentos e ${formatTime(timeElapsed)}!`;
-    axios.post(`/api/games/${currentGameId}/complete`, { timeElapsed: totalTime, phase: currentPhase }, {
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(() => {
-      currentPhase++;
-      diskCount++;
-      phaseDisplay.textContent = `Fase: ${currentPhase}`;
-      axios.post('/api/games/start', `playerName=${encodeURIComponent(playerNameInput.value)}&phase=${currentPhase}`, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      })
-      .then(response => {
-        currentGameId = response.data.id;
-        setupPhase();
-      })
-      .catch(error => {
-        console.error('Erro ao iniciar nova fase:', error);
-        alert('Erro ao iniciar nova fase. Tente novamente.');
-      });
-    })
-    .catch(error => {
-      console.error('Erro ao completar fase:', error);
-      alert('Erro ao salvar a fase. Tente novamente.');
-    });
+    currentPhase++;
+    diskCount++;
+    phaseDisplay.textContent = `Fase: ${currentPhase}`;
+    setupPhase();
   }
 }
 
@@ -228,26 +184,28 @@ function resetGame() {
 }
 
 function loadLeaderboard() {
-  axios.get('/api/games/leaderboard')
+  axios.get('/usuario')
     .then(response => {
-      const games = response.data;
-      // Ordenar por phase (decrescente) e, em caso de empate, por timeElapsed (crescente)
-      games.sort((a, b) => {
-        if (b.phase === a.phase) {
-          return a.timeElapsed - b.timeElapsed;
+      const users = response.data;
+      // Ordenar por fase (decrescente) e, em caso de empate, por tempo (crescente)
+      users.sort((a, b) => {
+        if (b.fase === a.fase) {
+          return new Date(a.tempo).getTime() - new Date(b.tempo).getTime();
         }
-        return b.phase - a.phase;
+        return b.fase - a.fase;
       });
       // Limpar tabela
       leaderboardBody.innerHTML = '';
       // Preencher tabela
-      games.forEach((game, index) => {
+      users.forEach((user, index) => {
         const row = document.createElement('tr');
+        // Converter tempo (Timestamp) para segundos para exibição
+        const seconds = Math.floor(new Date(user.tempo).getTime() / 1000);
         row.innerHTML = `
           <td>${index + 1}</td>
-          <td>${game.playerName}</td>
-          <td>${game.phase}</td>
-          <td>${formatTime(game.timeElapsed)}</td>
+          <td>${user.nome}</td>
+          <td>${user.fase}</td>
+          <td>${formatTime(seconds)}</td>
         `;
         leaderboardBody.appendChild(row);
       });
