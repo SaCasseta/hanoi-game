@@ -1,3 +1,3 @@
-# hanoi-game
+# HANOI-Game
 
-Jogo torre de HANOI.
+Torre de Hanoi
